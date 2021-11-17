@@ -54,4 +54,4 @@ jobs:
           script: |
             docker pull asdfasis/modoolist-server:latest
             docker rm -f modoolist-server-prod
-            docker run --name modoolist-server-prod --env-file /etc/modoolist-server.env -v /modoolist-files:/usr/src/app/exported-files -p 3000:3000 -d modoolist/modoolist-server
+            docker run --name modoolist-server-prod --env-file /etc/modoolist-server.env -v /modoolist-files:/usr/src/app/exported-files -p 3000:3000 -d asdfasis/modoolist-server
