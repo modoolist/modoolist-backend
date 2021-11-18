@@ -2,7 +2,6 @@ import { Client } from "@notionhq/client";
 import config from "../config";
 
 const notion = new Client({ auth: config.notionToken });
-config.notionPageId;
 
 export const notionLogger = async (
   level: any,
