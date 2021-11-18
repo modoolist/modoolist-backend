@@ -1,6 +1,6 @@
 import winston from "winston";
 import WinstonDaily from "winston-daily-rotate-file";
-// import { sendTGMessage } from './telegram';
+import { notionLogger } from "./notion";
 
 const logDir = "logs";
 const { combine, timestamp, printf } = winston.format;
@@ -36,9 +36,10 @@ const logger = winston.createLogger({
   ],
 });
 
-if (process.env.NODE_ENV !== undefined) {
+if (process.env.NODE_ENV !== "prod") {
   logger.add(
     new winston.transports.Console({
+      level: "http",
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
@@ -47,8 +48,8 @@ if (process.env.NODE_ENV !== undefined) {
   );
 } else {
   logger.on("data", ({ level, message, timestamp: time }) => {
-    if (!message.startsWith("[HttpException]") && level < 2) {
-      // sendTGMessage(`[${level}] ${message} (${time})`);
+    if (!message.startsWith("[HttpException]")) {
+      notionLogger(level, message, new Date(time).toISOString());
     }
   });
 }

@@ -25,6 +25,7 @@
     "tsc-watch": "^4.4.0"
   },
   "dependencies": {
+    "@notionhq/client": "^0.4.7",
     "@types/cors": "^2.8.12",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",

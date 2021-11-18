@@ -12,4 +12,7 @@ export default {
   dbUser: process.env.MARIADB_USERNAME!,
   dbPassword: process.env.MARIADB_PASSWORD!,
   dbDatabase: process.env.MARIADB_DATABASE!,
+
+  notionToken: process.env.NOTION_TOKEN!,
+  notionPageId: process.env.NOTION_DB_ID!,
 };
