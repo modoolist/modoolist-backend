@@ -1,28 +1,29 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
   BaseEntity,
-  CreateDateColumn,
 } from "typeorm";
 
-@Entity("modoo_sub_todos")
+@Index("modoo_sub_todos_mst_id_uindex", ["mstId"], { unique: true })
+@Entity("modoo_sub_todos", { schema: "dev" })
 export class SubTodos extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  mst_id: number;
+  @PrimaryGeneratedColumn({ type: "int", name: "mst_id" })
+  mstId: number;
 
-  @Column()
-  mst_mpt_id: number;
+  @Column("int", { primary: true, name: "mst_mpt_id" })
+  mstMptId: number;
 
-  @Column()
-  mst_title: string;
+  @Column("varchar", { name: "mst_title", length: 255 })
+  mstTitle: string;
 
-  @Column()
-  mst_isAchived: boolean;
+  @Column("tinyint", { name: "mst_isAchieved", width: 1, default: () => "'0'" })
+  mstIsAchieved: boolean;
 
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
+  @Column("timestamp", {
+    name: "mst_created_at",
+    default: () => "CURRENT_TIMESTAMP",
   })
-  mpt_created_at: Date;
+  mstCreatedAt: Date;
 }

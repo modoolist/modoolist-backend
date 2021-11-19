@@ -1,28 +1,33 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
   BaseEntity,
-  CreateDateColumn,
 } from "typeorm";
 
-@Entity("modoo_primary_todos")
+@Index("modoo_primary_todos_mpt_id_uindex", ["mptId"], { unique: true })
+@Entity("modoo_primary_todos", { schema: "dev" })
 export class PrimaryTodos extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  mpt_id: number;
+  @PrimaryGeneratedColumn({ type: "int", name: "mpt_id" })
+  mptId: number;
 
-  @Column()
-  mpt_mu_id: number;
+  @Column("int", { primary: true, name: "mpt_mu_id" })
+  mptMuId: number;
 
-  @Column()
-  mpt_title: string;
+  @Column("varchar", { name: "mpt_title", length: 255 })
+  mptTitle: string;
 
-  @Column({ type: "timestamp" })
-  mpt_period: Date;
-
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
+  @Column("timestamp", {
+    name: "mpt_period",
+    default: () => "CURRENT_TIMESTAMP",
   })
-  mpt_created_at: Date;
+  mptPeriod: Date;
+
+  @Column("timestamp", {
+    name: "mpt_created_at",
+    nullable: true,
+    default: () => "CURRENT_TIMESTAMP",
+  })
+  mptCreatedAt: Date | null;
 }
