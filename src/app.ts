@@ -4,10 +4,10 @@ import cors from "cors";
 import morgan from "morgan";
 import { createConnection } from "typeorm";
 
-import config from "./config";
 import { httpLogStream, logger } from "./resources/logger";
 import { serviceDocsRouter, serviceRouter } from "./services";
 import { attachIdentity } from "./middlewares";
+import ormconfig from "./models/ormconfig";
 
 class App {
   public app: express.Application;
@@ -34,17 +34,7 @@ class App {
     );
   }
   private async connectMariaDB() {
-    await createConnection({
-      type: "mariadb",
-      host: config.dbHost,
-      port: config.dbPort,
-      username: config.dbUser,
-      password: config.dbPassword,
-      database: config.dbDatabase,
-      entities: ["model/entity/**/*.ts"],
-      migrations: ["model/migration/**/*.ts"],
-      subscribers: ["model/subscriber/**/*.ts"],
-    });
+    await createConnection(ormconfig);
     logger.info(`MariaDB connected successfully`);
   }
   private initializeMorgan() {
