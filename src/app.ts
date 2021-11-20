@@ -38,6 +38,9 @@ class App {
     logger.info(`MariaDB connected successfully`);
   }
   private initializeMorgan() {
+    if (process.env.NODE_ENV === "prod") {
+      this.app.enable("trust proxy");
+    }
     const morganFormat = `HTTP/:http-version :method :remote-addr 
       :url :remote-user :status :res[content-length] 
       :referrer :user-agent :response-time ms`;
