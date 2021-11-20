@@ -15,4 +15,9 @@ export default {
 
   notionToken: process.env.NOTION_TOKEN!,
   notionPageId: process.env.NOTION_DB_ID!,
+
+  smtpHost: process.env.SMTP_HOST!,
+  smtpUsername: process.env.SMTP_USERNAME!,
+  smtpPassword: process.env.SMTP_PASSWORD!,
+  smtpAddr: process.env.SMTP_ADDR!,
 };
