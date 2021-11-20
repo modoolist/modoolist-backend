@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpException } from "../../exceptions";
 import { issueToken } from "../../resources/token";
-import { User } from "../../interfaces";
+import { Users } from "../../models/entity/Users";
 
 export const identifyUser = async (req: Request, res: Response) => {
   //로그인 로직
