@@ -14,6 +14,13 @@ export default createService({
     },
     {
       method: "post",
+      path: "/certmail/:token",
+      handler: controllers.authMail,
+      needAuth: false,
+      needPermission: false,
+    },
+    {
+      method: "post",
       path: "/",
       handler: controllers.identifyUser,
       needAuth: false,
