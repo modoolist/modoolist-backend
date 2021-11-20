@@ -6,28 +6,28 @@ import {
   BaseEntity,
 } from "typeorm";
 
-@Index("modoo_primary_todos_mpt_id_uindex", ["mptId"], { unique: true })
+@Index("modoo_primary_todos_mpt_id_uindex", ["id"], { unique: true })
 @Entity("modoo_primary_todos", { schema: "dev" })
 export class PrimaryTodos extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "int", name: "mpt_id" })
-  mptId: number;
+  id: number;
 
   @Column("int", { primary: true, name: "mpt_mu_id" })
-  mptMuId: number;
+  muId: number;
 
   @Column("varchar", { name: "mpt_title", length: 255 })
-  mptTitle: string;
+  title: string;
 
   @Column("timestamp", {
     name: "mpt_period",
     default: () => "CURRENT_TIMESTAMP",
   })
-  mptPeriod: Date;
+  period: Date;
 
   @Column("timestamp", {
     name: "mpt_created_at",
     nullable: true,
     default: () => "CURRENT_TIMESTAMP",
   })
-  mptCreatedAt: Date | null;
+  createdAt: Date | null;
 }
