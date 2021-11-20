@@ -17,14 +17,6 @@ const checkPermissions =
       );
     }
 
-    // 관리자 권한이 필요한 라우트에 접근하는데 권한이 없는 경우
-    if (req.user?.userType !== "Administrator" && route.needPermission) {
-      throw new HttpException(
-        403,
-        "해당 라우트에 접근하기 위해 필요한 권한이 없습니다."
-      );
-    }
-
     // 모든 검사 통과
     return next();
   };

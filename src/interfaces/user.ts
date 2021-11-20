@@ -1,3 +1,8 @@
 export interface User {
-  userType: any;
+  id?: number;
+  email: string;
+  password: string;
+  username: string;
+  points?: number;
+  createdAt?: Date;
 }
