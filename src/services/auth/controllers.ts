@@ -29,7 +29,7 @@ export const identifyUser = async (req: Request, res: Response) => {
 export const registerUser = async (req: Request, res: Response) => {
   //회원가입 로직
   const { email, password, username } = req.body as User;
-  if (!Users.findOne({ email: req.body.email })) {
+  if (!Users.findOne({ email: email })) {
     throw new HttpException(400, "이미 존재하는 이메일입니다.");
   }
   try {
