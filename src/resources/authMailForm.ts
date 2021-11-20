@@ -79,7 +79,7 @@ export default (username: string, authUrl: string) => {
             <div align="center">
               <a href="https://modoo.asdf.land/mailcert/${authUrl}">
                 <img
-                  src="https://user-images.githubusercontent.com/48921632/142731420-2c14539a-139a-4fd5-9d8d-d27ab47046a7.png"
+                  src="https://user-images.githubusercontent.com/48921632/142733995-b8cc9c3a-745d-41f6-b055-6e30c4f8bd54.png"
                   style="width: 140px"
                 />
               </a>
