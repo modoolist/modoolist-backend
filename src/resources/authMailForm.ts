@@ -73,7 +73,7 @@ export default (username: string, authToken: string) => {
               안녕하세요, ${username}님!
             </div>
             <div style="margin-top: 35px; margin-bottom: 35px">
-              모두리스트와 함께해주셔서 감사합니다!<br />아래 버튼을 눌러
+              모두리스트와 함께해주셔서 감사합니다.<br />아래 버튼을 눌러
               회원가입을 마무리해주세요.
             </div>
             <div align="center">
