@@ -16,11 +16,12 @@ export const sendMail = async (
   letter: string
 ) => {
   const mailOptions = {
-    from: config.smtpAddr,
+    from: `Modoolist <${config.smtpAddr}>`,
     to: userAddr,
     subject: subject,
     html: letter,
   };
-
-  return await transporter.sendMail(mailOptions);
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (e) {}
 };
