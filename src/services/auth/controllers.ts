@@ -10,6 +10,7 @@ import { Users } from "../../models/entity/Users";
 import { User } from "../../interfaces";
 import authMailForm from "../../resources/authMailForm";
 import bcrypt from "bcrypt";
+import { encrypt, decrypt } from "../../resources/AES";
 import { logger } from "../../resources/logger";
 
 export const identifyUser = async (req: Request, res: Response) => {
@@ -48,7 +49,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const mailLog = await sendMail(
       email,
       "모두리스트 이메일 인증",
-      authMailForm(username, token)
+      authMailForm(username, encrypt(token))
     );
     logger.info(`mail sent. ${mailLog.accepted} | ${mailLog.messageId}`);
 
@@ -61,7 +62,7 @@ export const registerUser = async (req: Request, res: Response) => {
 export const authMail = async (req: Request, res: Response) => {
   //메일 인증 로직
   const { token } = req.params;
-  const decoded = await verify(token);
+  const decoded = await verify(decrypt(token));
   const newUser = new Users();
 
   newUser.email = decoded.email;

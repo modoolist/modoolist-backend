@@ -6,6 +6,7 @@ if (!env) throw new Error(".env file not exist");
 export default {
   port: process.env.SERVER_PORT!,
   jwtSecret: process.env.JWT_SECRET!,
+  AESKey: process.env.AES_KEY!,
 
   dbHost: process.env.MARIADB_HOST!,
   dbPort: process.env.MARIADB_PORT! as unknown as number,
