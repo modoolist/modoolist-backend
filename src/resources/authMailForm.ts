@@ -1,4 +1,4 @@
-export default (username: string, authUrl: string) => {
+export default (username: string, authToken: string) => {
   return `<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
       <style>
@@ -77,9 +77,9 @@ export default (username: string, authUrl: string) => {
               회원가입을 마무리해주세요.
             </div>
             <div align="center">
-              <a href="https://modoo.asdf.land/mailcert/${authUrl}">
+              <a href="https://modoo.asdf.land/mailcert/${authToken}">
                 <img
-                  src="https://user-images.githubusercontent.com/48921632/142733995-b8cc9c3a-745d-41f6-b055-6e30c4f8bd54.png"
+                  src="https://user-images.githubusercontent.com/48921632/142788749-694df6bf-b564-428e-a6da-a6bf68e4874e.png"
                   style="width: 140px"
                 />
               </a>
