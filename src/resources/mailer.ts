@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { HttpException } from "../exceptions";
 import config from "../config";
 
 const transporter = nodemailer.createTransport({
@@ -21,6 +22,9 @@ export const sendMail = async (
     subject: subject,
     html: letter,
   };
-
-  return await transporter.sendMail(mailOptions);
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (e) {
+    throw new HttpException(520, e);
+  }
 };
