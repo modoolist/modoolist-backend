@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import { logger } from "../resources/logger";
 import config from "../config";
 
 const notion = new Client({ auth: config.notionToken });
@@ -34,6 +35,6 @@ export const notionLogger = async (
       },
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
   }
 };

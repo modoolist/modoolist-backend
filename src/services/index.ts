@@ -10,6 +10,7 @@ import {
 import { join as pathJoin } from "path";
 import { HTTPMethod } from "../types";
 import { checkPermissions, validator } from "../middlewares";
+import { logger } from "../resources/logger";
 
 interface KeyValue<T> {
   [key: string]: T;
@@ -44,8 +45,9 @@ const wrapper =
   (asyncFn: any) => async (req: Request, res: Response, next: NextFunction) => {
     try {
       return await asyncFn(req, res, next);
-    } catch (error) {
-      return next(error);
+    } catch (e) {
+      logger.error(e);
+      return next(e);
     }
   };
 

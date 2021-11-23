@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { logger } from "../resources/logger";
 import { verify } from "../resources/token";
 
 const attachIdentity = async (
@@ -15,6 +16,7 @@ const attachIdentity = async (
     req.user = identity;
     next();
   } catch (e) {
+    logger.error(e);
     return next(e);
   }
 };

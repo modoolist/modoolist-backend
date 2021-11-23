@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { HttpException } from "../exceptions";
 import config from "../config";
+import { logger } from "../resources/logger";
 
 const transporter = nodemailer.createTransport({
   host: config.smtpHost,
@@ -25,6 +26,7 @@ export const sendMail = async (
   try {
     return await transporter.sendMail(mailOptions);
   } catch (e) {
-    throw new HttpException(520, e);
+    logger.error(e);
+    throw new HttpException(520, "메일서버에서 메일을 전송하지 못했습니다.");
   }
 };

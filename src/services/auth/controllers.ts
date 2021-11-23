@@ -15,22 +15,27 @@ import { logger } from "../../resources/logger";
 
 export const identifyUser = async (req: Request, res: Response) => {
   //로그인 로직
-  const { email, password } = req.body;
-  const user = await Users.findOne({ email: email });
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!user && !isPasswordValid) {
-    throw new HttpException(401, "잘못된 이메일 또는 패스워드입니다.");
+  try {
+    const { email, password } = req.body;
+    const user = await Users.findOne({ email: email });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!user && !isPasswordValid) {
+      throw new HttpException(401, "잘못된 이메일 또는 패스워드입니다.");
+    }
+    res.status(200).json({
+      accessToken: await issueToken(user, false),
+      refreshToken: await issueToken(user, true),
+    });
+  } catch (e) {
+    logger.error(e);
+    throw new HttpException(401);
   }
-  res.status(200).json({
-    accessToken: await issueToken(user, false),
-    refreshToken: await issueToken(user, true),
-  });
 };
 
 export const registerUser = async (req: Request, res: Response) => {
   //회원가입 로직
   const { email, password, username } = req.body as User;
-  if (!Users.findOne({ email: email })) {
+  if (await Users.findOne({ email: email })) {
     throw new HttpException(400, "이미 존재하는 이메일입니다.");
   }
   try {
@@ -55,25 +60,35 @@ export const registerUser = async (req: Request, res: Response) => {
 
     res.sendStatus(200);
   } catch (e) {
+    logger.error(e);
     throw new HttpException(400);
   }
 };
 
 export const authMail = async (req: Request, res: Response) => {
   //메일 인증 로직
-  const { token } = req.params;
-  const decoded = await verify(decrypt(token));
-  const newUser = new Users();
+  try {
+    const { token } = req.params;
+    const decoded = await verify(decrypt(token));
+    if (await Users.findOne({ email: decoded.email })) {
+      throw new Error("EmailAlreadyExists");
+    }
+    const newUser = new Users();
 
-  newUser.email = decoded.email;
-  newUser.username = decoded.username;
-  newUser.password = decoded.password;
-  const user = await newUser.save();
+    newUser.email = decoded.email;
+    newUser.username = decoded.username;
+    newUser.password = decoded.password;
+    await newUser.save();
 
-  res.status(200).json({
-    accessToken: await issueToken(user, false),
-    refreshToken: await issueToken(user, true),
-  });
+    res.sendStatus(200);
+  } catch (e) {
+    logger.error(e);
+    if (e.message === "EmailAlreadyExists") {
+      throw new HttpException(400, "이미 인증된 메일입니다."); // 이 단계에서 이메일이 이미 존재하면 이메일이 인증된 경우밖에 없음
+    } else {
+      throw new HttpException(400, "인증 실패");
+    }
+  }
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
