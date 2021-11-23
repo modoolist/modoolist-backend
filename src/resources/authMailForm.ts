@@ -77,7 +77,7 @@ export default (username: string, authToken: string) => {
               회원가입을 마무리해주세요.
             </div>
             <div align="center">
-              <a href="https://modoo.asdf.land/mailcert/${authToken}">
+              <a href="https://modoo.asdf.land/certmail/${authToken}">
                 <img
                   src="https://user-images.githubusercontent.com/48921632/142788749-694df6bf-b564-428e-a6da-a6bf68e4874e.png"
                   style="width: 140px"
