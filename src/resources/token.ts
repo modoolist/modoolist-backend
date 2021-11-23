@@ -45,7 +45,7 @@ export const issue = async (
     const token = await jwt.sign(
       {
         identity: {
-          idx: identity.id,
+          id: identity.id,
         },
         refresh: true,
       },

@@ -1,7 +1,7 @@
 export interface User {
   id?: number;
   email: string;
-  password: string;
+  password?: string;
   username: string;
   points?: number;
   createdAt?: Date;

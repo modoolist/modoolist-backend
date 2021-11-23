@@ -18,17 +18,30 @@ export const identifyUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const user = await Users.findOne({ email: email });
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!user && !isPasswordValid) {
-      throw new HttpException(401, "잘못된 이메일 또는 패스워드입니다.");
+    if (!user) {
+      throw new Error("NoUser");
     }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("WrongPW");
+    }
+    const identity = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      points: user.points,
+    };
     res.status(200).json({
-      accessToken: await issueToken(user, false),
-      refreshToken: await issueToken(user, true),
+      accessToken: await issueToken(identity, false),
+      refreshToken: await issueToken(identity, true),
     });
   } catch (e) {
     logger.error(e);
-    throw new HttpException(401);
+    if (e.message === "NoUser" || e.message === "WrongPW") {
+      throw new HttpException(400, "아이디 또는 패스워드가 존재하지 않습니다.");
+    } else {
+      throw new HttpException(400, "로그인 오류");
+    }
   }
 };
 
@@ -105,7 +118,11 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
     throw new HttpException(400, "리프레시 토큰이 아닙니다.");
 
   const payload = await verify(refreshToken);
-  const identity = await Users.findOne({ id: payload.idx });
+  const { id, email, username, points } = await Users.findOne({
+    id: payload.id,
+  });
+  const identity = { id, email, username, points };
+
   res.json({
     accessToken: await issueToken(identity, false),
     refreshToken: await issueToken(identity, true),
