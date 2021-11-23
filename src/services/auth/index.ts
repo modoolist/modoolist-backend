@@ -16,7 +16,7 @@ export default createService({
         email: Joi.string().email().required(),
         password: Joi.string()
           .pattern(
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
+            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&;:"'~])[A-Za-z\d$@$!%*#?&;:"'~]{8,}$/
           )
           .required(),
         username: Joi.string().required(),
@@ -44,7 +44,7 @@ export default createService({
       method: "post",
       path: "/refresh",
       handler: controllers.refreshAccessToken,
-      needAuth: false,
+      needAuth: true,
       needPermission: false,
     },
   ],
