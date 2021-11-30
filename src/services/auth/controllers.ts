@@ -19,11 +19,11 @@ export const identifyUser = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const user = await Users.findOne({ email: email });
     if (!user) {
-      throw new Error("NoUser");
+      throw new Error("아이디나 비밀번호를 잘못 입력했습니다.");
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error("WrongPW");
+      throw new Error("아이디나 비밀번호를 잘못 입력했습니다.");
     }
     const identity = {
       id: user.id,
@@ -37,11 +37,10 @@ export const identifyUser = async (req: Request, res: Response) => {
     });
   } catch (e) {
     logger.error(e);
-    if (e.message === "NoUser" || e.message === "WrongPW") {
-      throw new HttpException(400, "아이디 또는 패스워드가 존재하지 않습니다.");
-    } else {
-      throw new HttpException(400, "로그인 오류");
+    if (e.message) {
+      throw new HttpException(400, e.message);
     }
+    throw new HttpException(400, "로그인 오류");
   }
 };
 
@@ -73,7 +72,9 @@ export const registerUser = async (req: Request, res: Response) => {
 
     res.sendStatus(200);
   } catch (e) {
-    logger.error(e);
+    if (e.message) {
+      throw new HttpException(400, e.message);
+    }
     throw new HttpException(400);
   }
 };
@@ -84,7 +85,7 @@ export const authMail = async (req: Request, res: Response) => {
     const { token } = req.params;
     const decoded = await verify(decrypt(token));
     if (await Users.findOne({ email: decoded.email })) {
-      throw new Error("EmailAlreadyExists");
+      throw new Error("이미 인증된 메일입니다.");
     }
     const newUser = new Users();
 
@@ -96,11 +97,10 @@ export const authMail = async (req: Request, res: Response) => {
     res.sendStatus(200);
   } catch (e) {
     logger.error(e);
-    if (e.message === "EmailAlreadyExists") {
-      throw new HttpException(400, "이미 인증된 메일입니다."); // 이 단계에서 이메일이 이미 존재하면 이메일이 인증된 경우밖에 없음
-    } else {
-      throw new HttpException(400, "인증 실패");
+    if (e.message) {
+      throw new HttpException(400, e.message);
     }
+    throw new HttpException(400, "인증 실패");
   }
 };
 
@@ -109,22 +109,29 @@ export const resetPassword = async (req: Request, res: Response) => {
 };
 
 export const refreshAccessToken = async (req: Request, res: Response) => {
-  const { token: refreshToken } = req;
-  if (!refreshToken)
-    throw new HttpException(400, "리프레시 토큰이 전달되지 않았습니다.");
+  try {
+    const { token: refreshToken } = req;
+    if (!refreshToken)
+      throw new HttpException(400, "리프레시 토큰이 전달되지 않았습니다.");
 
-  const tokenType = await getTokenType(refreshToken);
-  if (tokenType !== "REFRESH")
-    throw new HttpException(400, "리프레시 토큰이 아닙니다.");
+    const tokenType = await getTokenType(refreshToken);
+    if (tokenType !== "REFRESH")
+      throw new HttpException(400, "리프레시 토큰이 아닙니다.");
 
-  const payload = await verify(refreshToken);
-  const { id, email, username, points } = await Users.findOne({
-    id: payload.id,
-  });
-  const identity = { id, email, username, points };
+    const payload = await verify(refreshToken);
+    const { id, email, username, points } = await Users.findOne({
+      id: payload.id,
+    });
+    const identity = { id, email, username, points };
 
-  res.json({
-    accessToken: await issueToken(identity, false),
-    refreshToken: await issueToken(identity, true),
-  });
+    res.json({
+      accessToken: await issueToken(identity, false),
+      refreshToken: await issueToken(identity, true),
+    });
+  } catch (e) {
+    if (e.message) {
+      throw new HttpException(400, e.message);
+    }
+    throw new HttpException(400, "리프레시 토큰 오류");
+  }
 };
