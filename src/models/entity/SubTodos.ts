@@ -25,7 +25,7 @@ export class SubTodos extends BaseEntity {
     name: "mst_duedate",
     default: () => "CURDATE",
   })
-  period: Date;
+  duedate: Date;
 
   @Column("tinyint", { name: "mst_isAchieved", width: 1, default: () => "'0'" })
   isAchieved: boolean;
