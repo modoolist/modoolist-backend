@@ -3,16 +3,25 @@ import { SubTodos } from "../../models/entity/SubTodos";
 import { PrimaryTodos } from "../../models/entity/PrimaryTodos";
 import { HttpException } from "../../exceptions";
 
+const dateFormatter = (date: Date) => {
+  return (
+    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+  );
+};
+
 export const newPrimTodo = async (req: Request, res: Response) => {
   try {
     const { title, period } = req.body;
-    if (new Date(period) > new Date()) {
+    const date = period ? new Date(period) : new Date();
+    if (date > new Date()) {
       throw new HttpException(400, "미래의 작업을 계획할 수 없습니다.");
     }
+    const sunday = new Date(date.setDate(date.getDate() - date.getDay()));
+
     const primTodo = new PrimaryTodos();
     primTodo.muId = req.user.id;
     primTodo.title = title;
-    primTodo.period = new Date(period); // period를 받지 않으면 오늘을 period로 설정한다.
+    primTodo.period = sunday; // period를 받지 않으면 오늘을 period로 설정한다.
     res.status(201).send(await primTodo.save());
   } catch (e) {
     if (e.message) {
