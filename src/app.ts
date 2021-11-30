@@ -25,13 +25,13 @@ class App {
   private initializeMiddlewares() {
     this.app.use(cors());
     this.app.use(express.json()); // for parsing application/json
-    this.app.use(attachIdentity);
     this.app.use(
       bearerToken({
         headerKey: "Bearer",
         reqKey: "token",
       })
     );
+    this.app.use(attachIdentity);
   }
   private async connectMariaDB() {
     await createConnection(ormconfig);
