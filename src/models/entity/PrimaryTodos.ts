@@ -18,9 +18,9 @@ export class PrimaryTodos extends BaseEntity {
   @Column("varchar", { name: "mpt_title", length: 255 })
   title: string;
 
-  @Column("timestamp", {
+  @Column("date", {
     name: "mpt_period",
-    default: () => "CURRENT_TIMESTAMP",
+    default: () => "CURDATE",
   })
   period: Date;
 
