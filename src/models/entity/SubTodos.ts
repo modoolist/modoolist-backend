@@ -39,6 +39,7 @@ export class SubTodos extends BaseEntity {
   static countAchievedTasks(startsAt: string, endsAt: string, userId: number) {
     return this.createQueryBuilder()
       .select("mst_duedate as duedate")
+      .addSelect(`COUNT(case when mst_mu_id = ${userId} then 1 end) as total`)
       .addSelect(
         `COUNT(case when mst_mu_id = ${userId} and mst_isAchieved = true then 1 end) as achieved`
       )
