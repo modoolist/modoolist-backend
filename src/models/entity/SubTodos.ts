@@ -35,4 +35,15 @@ export class SubTodos extends BaseEntity {
     default: () => "CURRENT_TIMESTAMP",
   })
   createdAt: Date;
+
+  static countAchievedTasks(startsAt: string, endsAt: string, userId: number) {
+    return this.createQueryBuilder()
+      .select("mst_duedate as duedate")
+      .addSelect(
+        `COUNT(case when mst_mu_id = ${userId} and mst_isAchieved = true then 1 end) as achieved`
+      )
+      .where(`mst_duedate BETWEEN '${startsAt}' AND '${endsAt}'`)
+      .groupBy("mst_duedate")
+      .getRawMany();
+  }
 }
