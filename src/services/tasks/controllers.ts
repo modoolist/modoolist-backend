@@ -29,10 +29,10 @@ export const getPrimaryTask = async (req: Request, res: Response) => {
     const sunday = dateFormatter(
       new Date(date.setDate(date.getDate() - date.getDay()))
     );
-    const todo = await PrimaryTodos.findOne(
-      { muId: req.user.id },
-      { order: { period: "DESC" } } //최근 Primary 하나만 Query
-    );
+    const todo = await PrimaryTodos.findOne({
+      muId: req.user.id,
+      period: sunday,
+    });
     if (todo.period.toString() === sunday) {
       return res.status(200).send(todo); //이번 Period의 Task만 반환
     }
