@@ -2,14 +2,9 @@ import { Request, Response } from "express";
 import { SubTodos } from "../../models/entity/SubTodos";
 import { PrimaryTodos } from "../../models/entity/PrimaryTodos";
 import { HttpException } from "../../exceptions";
+import dateFormatter from "../../resources/dateFormatter";
 
-const dateFormatter = (date: Date) => {
-  return (
-    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-  );
-};
-
-export const newPrimTodo = async (req: Request, res: Response) => {
+export const newPrimTask = async (req: Request, res: Response) => {
   try {
     const { title, period } = req.body;
     const date = period ? new Date(period) : new Date();
@@ -31,20 +26,24 @@ export const newPrimTodo = async (req: Request, res: Response) => {
   }
 };
 
-export const newSubTodo = async (req: Request, res: Response) => {
+export const newSubTasks = async (req: Request, res: Response) => {
   try {
     const date = new Date(req.params.date);
-    const { title, id } = req.body;
+    const id = req.params.id as unknown as number;
+    const { titles } = req.body;
 
     if (!(await PrimaryTodos.findOne({ id, muId: req.user.id }))) {
       throw new HttpException(400, "등록할 수 없는 태스크입니다.");
     }
-    const subTodo = new SubTodos();
-    subTodo.muId = req.user.id;
-    subTodo.mptId = id as unknown as number;
-    subTodo.title = title;
-    subTodo.duedate = date;
-    res.status(201).send(await subTodo.save());
+    titles.forEach(async (title: any) => {
+      const subTodo = new SubTodos();
+      subTodo.muId = req.user.id;
+      subTodo.mptId = id as unknown as number;
+      subTodo.title = title;
+      subTodo.duedate = date;
+      await subTodo.save();
+    });
+    return res.sendStatus(201);
   } catch (e) {
     if (e.message) {
       throw new HttpException(400, e.message);
