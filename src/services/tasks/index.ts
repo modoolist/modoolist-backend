@@ -29,8 +29,15 @@ export default createService({
     },
     {
       method: "get",
-      path: "/weekly",
-      handler: controllers.getThisPrimaryTodo,
+      path: "/primary",
+      handler: controllers.getPrimaryTasks,
+      needAuth: true,
+      needPermission: false,
+    },
+    {
+      method: "get",
+      path: "/primary/:date",
+      handler: controllers.getPrimaryTask,
       needAuth: true,
       needPermission: false,
     },
